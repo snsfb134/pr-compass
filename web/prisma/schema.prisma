@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Source {
+  sourceId       String   @id @map("source_id")
+  title          String
+  url            String
+  publisher      String
+  sourceType     String   @map("source_type")
+  programTags    String   @map("program_tags")
+  checkFrequency String   @map("check_frequency")
+  active         Int      @default(1)
+  lastCheckedAt   DateTime? @map("last_checked_at")
+  lastChangedAt  DateTime? @map("last_changed_at")
+  lastHash       String?  @map("last_hash")
+
+  @@map("sources")
+}
+
+model OfficialRecord {
+  recordId      String   @id @map("record_id")
+  sourceId      String   @map("source_id")
+  recordType    String   @map("record_type")
+  recordCategory String? @map("record_category")
+  policyScope   String?  @map("policy_scope")
+  stage         String?
+  metricName    String?  @map("metric_name")
+  metricValue   String?  @map("metric_value")
+  metricUnit    String?  @map("metric_unit")
+  eventDate     String   @map("event_date")
+  title         String
+  program       String
+  minimumScore  String?  @map("minimum_score")
+  invitations   String?
+  processingTime String? @map("processing_time")
+  rawText       String   @map("raw_text")
+  sourceUrl     String   @map("source_url")
+  observedAt    DateTime @map("observed_at")
+  dataBasisAt   DateTime @map("data_basis_at")
+
+  @@map("official_records")
+}
+
+model Change {
+  changeId      String   @id @map("change_id")
+  sourceId      String   @map("source_id")
+  detectedAt    DateTime @map("detected_at")
+  changeType    String   @map("change_type")
+  summaryKo     String   @map("summary_ko")
+  confidence    String
+  needsReview   Int      @map("needs_review")
+  diffExcerpt   String   @map("diff_excerpt")
+  impactLevel   String   @map("impact_level")
+  evidenceUrl   String   @map("evidence_url")
+  dataBasisAt   DateTime @map("data_basis_at")
+  hidden        Int      @default(0)
+  environment   String   @default("production")
+
+  @@map("changes")
+}

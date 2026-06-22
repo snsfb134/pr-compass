@@ -1,0 +1,38 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="14" y1="12" x2="116" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#304642"/>
+      <stop offset="0.55" stop-color="#5f7259"/>
+      <stop offset="1" stop-color="#d2b058"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(34 30) rotate(45) scale(88 88)">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.38"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="28" y1="22" x2="100" y2="106" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff6da" stop-opacity="0.96"/>
+      <stop offset="0.5" stop-color="#d9bd67" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#fff0ba" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="needle" x1="64" y1="28" x2="64" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff4d0"/>
+      <stop offset="0.5" stop-color="#e4c46f"/>
+      <stop offset="1" stop-color="#22312d"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="108" height="108" rx="30" fill="url(#bg)"/>
+  <rect x="10" y="10" width="108" height="108" rx="30" fill="url(#shine)"/>
+  <circle cx="64" cy="64" r="38" fill="rgba(255,255,255,0.04)" stroke="url(#ring)" stroke-width="2.5"/>
+  <circle cx="64" cy="64" r="25" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"/>
+  <path d="M64 24L70 54L64 61L58 54L64 24Z" fill="url(#needle)"/>
+  <path d="M64 104L70 74L64 67L58 74L64 104Z" fill="#22312d" fill-opacity="0.9"/>
+  <path d="M24 64H38" stroke="rgba(255,255,255,0.68)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M90 64H104" stroke="rgba(255,255,255,0.68)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M64 24V38" stroke="rgba(255,255,255,0.68)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M64 90V104" stroke="rgba(255,255,255,0.68)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M46 46L58 58" stroke="#fff7df" stroke-opacity="0.65" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M82 46L70 58" stroke="#fff7df" stroke-opacity="0.65" stroke-width="1.7" stroke-linecap="round"/>
+  <circle cx="64" cy="64" r="5" fill="#fffaf0"/>
+  <circle cx="64" cy="64" r="1.6" fill="#22312d"/>
+</svg>
