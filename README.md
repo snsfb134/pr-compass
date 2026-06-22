@@ -1,64 +1,65 @@
 # PR Compass
 
-캐나다 영주권 준비 과정에서 필요한 공식 이민 정보를 한곳에서 추적하고, 변화 신호를 빠르게 확인할 수 있도록 만든 개인 프로젝트입니다.
+Korean version: [README.ko.md](./README.ko.md)
 
-PR Compass는 흩어져 있는 이민 정책 페이지를 주기적으로 확인하고, 변경 이력을 저장하고, 사용자 프로필 기준으로 어떤 변화가 더 중요한지 보여주는 것을 목표로 합니다.
+PR Compass is a personal product project for tracking official Canadian immigration updates in one place and turning them into a clearer, more actionable view for applicants.
 
-## Why This Project
+The goal is to reduce the friction of checking scattered government and program pages, preserving change history, and surfacing which updates may matter more based on a user's profile.
 
-캐나다 이민 정보는 IRCC, WelcomeBC 등 여러 공식 사이트에 분산되어 있고, 실제로 중요한 변경이 생겨도 사용자가 직접 모든 페이지를 반복 확인해야 하는 불편이 있습니다.
+## Overview
 
-이 프로젝트는 아래 문제를 해결하는 데 초점을 맞췄습니다.
+Canadian immigration information is spread across multiple official sources such as IRCC and WelcomeBC. Important updates can appear without much context, and applicants often need to revisit the same pages repeatedly just to see what changed.
 
-- 공식 소스 변경 여부를 자동으로 추적
-- 변경 이력을 저장해 나중에 비교 가능하도록 구성
-- 사용자 상황에 따라 어떤 변화가 더 중요한지 분리해서 전달
-- 단순 정보 나열이 아니라 "지금 확인할 것" 중심의 흐름 제공
+PR Compass is designed to help with that by:
 
-## Current Status
+- monitoring official immigration sources on a recurring basis
+- storing snapshots and change history for later comparison
+- separating public signals from profile-specific impact
+- presenting a more decision-oriented flow instead of a raw list of updates
 
-현재 구현된 범위는 다음과 같습니다.
+## Current Scope
 
-- FastAPI 기반 백엔드
-- Next.js 기반 프론트엔드
-- 공식 이민 페이지 주기 점검
-- 스냅샷 및 변경 이력 저장
-- 개인 프로필 입력 및 잠금/해제 흐름
-- 공개 신호 / 개인 영향 분리 UI
-- 로컬 환경 기준 운영 점검 스크립트
+The current implementation includes:
 
-아직 AI 요약 기능은 실제 서비스 흐름에 연결하지 않았습니다.
-향후 변경 내용 요약과 사용자 맞춤 해석 기능은 `Gemini` 무료 버전을 활용해 붙일 계획입니다.
+- a FastAPI backend for source checks, records, profile data, and aggregated insights
+- a Next.js frontend for the user-facing dashboard experience
+- recurring checks for selected official immigration pages
+- snapshot storage and official change history tracking
+- profile input, completion, and locked/unlocked workflow states
+- separation between public signals and personalized impact views
+
+AI-assisted summaries are not yet wired into the live product flow.
+Planned summary and interpretation features are intended for a future integration using the free tier of `Gemini`.
 
 ## Planned Gemini Integration
 
-추가 예정인 기능은 아래와 같습니다.
+Planned future capabilities include:
 
-- 변경된 공식 문서 핵심 요약
-- 이전 상태 대비 무엇이 달라졌는지 정리
-- 사용자 프로필 기준 영향 포인트 설명
-- 다음 확인 행동 제안
+- summarizing the key point of an official update
+- highlighting what changed compared with the previous state
+- explaining likely impact based on a user's profile
+- suggesting what the user should check next
 
-초기 버전은 비용 부담을 줄이기 위해 `Gemini` 무료 버전을 기준으로 검토하고 있습니다.
+The first integration target is the free tier of `Gemini` to keep the early version lightweight and cost-conscious.
 
 ## Tech Stack
 
 - Backend: FastAPI, Python, SQLite
 - Frontend: Next.js, React, TypeScript, Tailwind CSS
-- Data/Monitoring: scheduled checks, snapshot storage, change history tracking
+- Data layer: scheduled source checks, snapshot storage, official record extraction, change tracking
 
 ## Project Structure
 
 ```text
 app/        FastAPI backend
 web/        Next.js frontend
-scripts/    monitoring and QA scripts
+scripts/    monitoring utilities
 data/       local runtime data (ignored in Git)
 ```
 
-## Getting Started
+## Running Locally
 
-### 1. Backend
+### 1. Start the backend
 
 ```bash
 git clone <your-repository-url>
@@ -68,7 +69,7 @@ python3 -m venv .venv
 .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8010
 ```
 
-### 2. Frontend
+### 2. Start the frontend
 
 ```bash
 cd web
@@ -76,19 +77,19 @@ yarn install
 yarn dev
 ```
 
-### 3. Open in Browser
+### 3. Open the app
 
 - Frontend: `http://127.0.0.1:3000`
 - Backend API: `http://127.0.0.1:8010`
 
 ## Notes
 
-- 이 프로젝트는 공식 이민 정보를 더 쉽게 추적하기 위한 도구이며, 법률 자문을 제공하지 않습니다.
-- 로컬 DB, 로그, 스냅샷, 환경 파일 등 실행 산출물은 공개 저장소에 포함하지 않도록 설정했습니다.
+- This project is intended to make official immigration information easier to track and interpret. It does not provide legal advice.
+- Local databases, logs, snapshots, and environment files are excluded from the public repository.
 
 ## Roadmap
 
-- Gemini 기반 변경 요약 및 해석 기능 연결
-- 주요 이민 스트림별 신호 분류 고도화
-- 사용자별 알림 우선순위 개선
-- 배포 가능한 데모 환경 정리
+- integrate Gemini-based update summaries and interpretation
+- improve signal grouping across major immigration streams
+- refine notification and prioritization logic per user profile
+- prepare a cleaner deployable demo environment
