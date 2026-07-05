@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "PR Compass",
-  description: "캐나다 영주권 전략을 위한 공식 소스 추적, 변경 감지, 해석, 로드맵 도구",
+  description: "BC PNP와 Express Entry 공식 업데이트를 AI가 한국어로 요약하고 비교하는 PR 브리핑 구독 서비스",
 };
 
 export default function RootLayout({ children }: { children: any }) {

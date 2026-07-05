@@ -56,7 +56,9 @@ def fetch_source(source: dict, *, baseline: bool = False, environment: str = "pr
             (source["source_id"], previous_hash),
         )
         if previous:
-            previous_text = Path(previous["snapshot_path"]).read_text(encoding="utf-8")
+            previous_snapshot_path = Path(previous["snapshot_path"])
+            if previous_snapshot_path.exists():
+                previous_text = previous_snapshot_path.read_text(encoding="utf-8")
 
     with connect() as conn:
         conn.execute(
@@ -350,4 +352,14 @@ def check_all_sources(*, baseline: bool = False, environment: str = "production"
                 record_source_check(source["source_id"], result, status="error", error=str(exc))
                 results.append(result)
     results.sort(key=lambda item: item["source_id"])
+    if not baseline and environment == "production" and any(item.get("changed") or item.get("new_records", 0) for item in results):
+        try:
+            from app.core.briefings import create_briefing_run
+
+            briefing = create_briefing_run(trigger_type="source_check", provider="heuristic")
+            for item in results:
+                item["briefing_run_id"] = briefing["run_id"]
+        except Exception as exc:
+            for item in results:
+                item["briefing_error"] = str(exc)
     return results

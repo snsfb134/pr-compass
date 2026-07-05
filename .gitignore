@@ -29,7 +29,10 @@ web/.kombai/
 # Runtime data and logs
 data/*.db
 data/*.sqlite3
+data/email-outbox/
 data/logs/
+data/replay-reports/
+data/reports/
 data/snapshots/
 
 # Generated screenshots and test artifacts

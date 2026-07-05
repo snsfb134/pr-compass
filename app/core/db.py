@@ -109,6 +109,32 @@ def init_db() -> None:
               payload_json text not null,
               insights_json text not null
             );
+
+            create table if not exists briefing_runs (
+              run_id text primary key,
+              generated_at text not null,
+              status text not null,
+              trigger_type text not null,
+              provider text not null,
+              trend_direction text not null,
+              confidence integer not null,
+              input_json text not null,
+              analysis_json text not null,
+              normalized_json text not null,
+              error text
+            );
+
+            create table if not exists email_queue (
+              email_id text primary key,
+              run_id text not null,
+              recipient_email text,
+              subject text not null,
+              preview_json text not null,
+              status text not null,
+              created_at text not null,
+              sent_at text,
+              foreign key(run_id) references briefing_runs(run_id)
+            );
             """
         )
         _ensure_column(conn, "changes", "program_tags", "text")
@@ -129,6 +155,12 @@ def init_db() -> None:
         _ensure_column(conn, "insights_cache", "window_days", "integer")
         _ensure_column(conn, "insights_cache", "compare_days", "integer")
         _ensure_column(conn, "insights_cache", "insights_json", "text")
+        _ensure_column(conn, "briefing_runs", "provider", "text")
+        _ensure_column(conn, "briefing_runs", "trend_direction", "text")
+        _ensure_column(conn, "briefing_runs", "confidence", "integer")
+        _ensure_column(conn, "briefing_runs", "error", "text")
+        _ensure_column(conn, "email_queue", "recipient_email", "text")
+        _ensure_column(conn, "email_queue", "sent_at", "text")
         conn.execute("update changes set environment = 'production' where environment is null")
         conn.execute("update changes set hidden = 0 where hidden is null")
         conn.execute("update changes set created_by = 'monitor' where created_by is null")

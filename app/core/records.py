@@ -170,6 +170,8 @@ def _extract_table_records(source: dict[str, Any], html: str, observed_at: str, 
 
         if not _looks_like_immigration_record(raw_text):
             continue
+        if source["source_id"] == "welcomebc_bc_pnp_invitations" and _looks_like_bc_pnp_distribution_row(cells, raw_text):
+            continue
 
         title = _build_title(source, event_date, cells)
         record = {
@@ -234,6 +236,30 @@ def _looks_like_immigration_record(text: str) -> bool:
         return True
     numbers = NUMBER_RE.findall(text)
     return len(numbers) >= 2
+
+
+def _looks_like_bc_pnp_distribution_row(cells: list[str], text: str) -> bool:
+    lowered = text.lower()
+    joined = " | ".join(cells)
+    has_score_range = bool(re.search(r"\b\d{1,3}\s*-\s*\d{1,3}\b", joined))
+    category_terms = [
+        "care:",
+        "health",
+        "childcare",
+        "construction",
+        "base",
+        "entrepreneur",
+        "tech",
+        "regional",
+        "priority",
+        "invitation",
+        "invitations",
+    ]
+    if has_score_range and not any(term in lowered for term in category_terms):
+        return True
+    if "number of registrations" in lowered or "score range" in lowered:
+        return True
+    return False
 
 
 def _build_title(source: dict[str, Any], event_date: str, cells: list[str]) -> str:

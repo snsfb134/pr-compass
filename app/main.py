@@ -7,6 +7,8 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.config import ROOT_DIR, WEB_APP_URL
+from app.core.analysis_provider import SUPPORTED_PROVIDERS
+from app.core.briefings import create_briefing_run, get_or_create_latest_briefing, latest_briefing_run
 from app.core.analysis import summarize_trend_insights
 from app.core.db import connect, execute, init_db, row, rows
 from app.core.monitor import check_all_sources
@@ -200,6 +202,27 @@ def api_insights(window_days: int = TREND_WINDOW_DAYS, compare_days: int = TREND
         "insights": insights,
         "cached": False,
     }
+
+
+@app.get("/api/briefing/latest")
+def api_briefing_latest() -> dict:
+    return get_or_create_latest_briefing()
+
+
+@app.post("/api/briefing/runs")
+def api_create_briefing_run(provider: str = "heuristic") -> dict:
+    if provider not in SUPPORTED_PROVIDERS:
+        supported = ", ".join(sorted(SUPPORTED_PROVIDERS))
+        raise HTTPException(status_code=400, detail=f"provider must be one of: {supported}")
+    return create_briefing_run(trigger_type="manual", provider=provider)
+
+
+@app.get("/api/briefing/runs/latest")
+def api_briefing_run_latest() -> dict:
+    latest = latest_briefing_run()
+    if not latest:
+        raise HTTPException(status_code=404, detail="No briefing run exists")
+    return latest
 
 
 @app.get("/api/source-health")
@@ -3151,4 +3174,3 @@ def api_check_sources(notify: bool = True, baseline: bool = False, environment: 
         "environment": environment,
         "results": results,
     }
-
