@@ -8,6 +8,21 @@ The current MVP focuses on **BC PNP + Express Entry**. It monitors official sour
 
 > PR Compass helps users read official updates more clearly. It does not provide legal advice.
 
+## Portfolio Snapshot
+
+This repository demonstrates a product/engineering iteration from an early profile-based immigration dashboard to a clearer subscription-first briefing MVP.
+
+Key work represented here:
+
+- product strategy pivot from CRS/profile tooling to official-update briefing
+- dark newsletter-first landing experience
+- subscriber briefing page and admin review page
+- official source extraction, structured record storage, and change history
+- replay QA over historical BC PNP and Express Entry records
+- normalized briefing schema for future Gemini integration
+- mock/SMTP email delivery path with copy preview before send
+- deployment planning for PM2, standalone Next.js, SQLite, and constrained hosting environments
+
 ## Product Direction
 
 PR Compass is no longer centered on a personal CRS/profile dashboard. The product has been simplified into a subscription-first briefing service:
@@ -51,6 +66,18 @@ Gemini is planned as the production analysis provider, but the current code inte
 - Provider contract validation before Gemini integration
 
 Legacy profile, CRS, simulator, and route-comparison screens may still exist in the codebase, but they are no longer the main product flow.
+
+## Deployment Status
+
+The app is prepared for a small VPS-style deployment with:
+
+- Next.js standalone build
+- FastAPI behind an internal route such as `/backend`
+- PM2 process management
+- SQLite data stored outside the deploy repository
+- Nginx reverse proxy when the host allows it
+
+A deployment experiment on an existing Gabia container hosting account found that the container was limited to Node.js 16, had no Python runtime, no sudo access, and exposed a single managed `$PORT`. That environment is not a good match for the current FastAPI + Next.js architecture, so production deployment is intentionally paused until a suitable VPS or Python-capable runtime is available.
 
 ## Tech Stack
 
@@ -107,6 +134,13 @@ Required for frontend-to-backend calls:
 NEXT_PUBLIC_API_BASE_URL="http://127.0.0.1:8010"
 ```
 
+Optional backend/runtime settings:
+
+```bash
+PR_COMPASS_DATA_DIR="/absolute/path/to/pr-compass-data"
+PR_COMPASS_WEB_APP_URL="http://127.0.0.1:3000"
+```
+
 Optional for local SMTP testing:
 
 ```bash
@@ -150,6 +184,12 @@ Send a test briefing email or render a mock outbox item:
 
 ```bash
 .venv/bin/python scripts/send_test_briefing_email.py --recipient-email you@example.com --scenarios 1 --pretty
+```
+
+Prepare a separate deployment repository bundle:
+
+```bash
+./scripts/prepare_deploy_repo.sh
 ```
 
 ## Pre-Gemini Readiness

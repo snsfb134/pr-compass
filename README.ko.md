@@ -8,6 +8,21 @@ PR Compass는 캐나다 이민 공식 업데이트를 매번 직접 확인하기
 
 > PR Compass는 공식 정보를 더 쉽게 읽도록 돕는 도구이며, 법률 자문을 제공하지 않습니다.
 
+## 포트폴리오 요약
+
+이 저장소는 초기 프로필/CRS 중심 대시보드 실험에서 시작해, 공식 업데이트를 중심으로 한 구독형 브리핑 MVP로 제품 방향을 재정리한 과정을 보여줍니다.
+
+주요 구현/설계 범위:
+
+- CRS/프로필 중심 툴에서 공식 업데이트 브리핑 서비스로 제품 전략 전환
+- 다크 톤의 뉴스레터 중심 랜딩 화면
+- 구독자 브리핑 페이지와 운영자 검토 페이지
+- 공식 소스 추출, 구조화 records 저장, 변경 이력 관리
+- BC PNP와 Express Entry 과거 기록 기반 replay QA
+- Gemini 연결 전 사용할 normalized briefing schema
+- mock/SMTP 이메일 발송 경로와 발송 전 문구 미리보기
+- PM2, standalone Next.js, SQLite, 제한된 호스팅 환경을 고려한 배포 설계
+
 ## 제품 방향
 
 초기에는 개인 프로필, CRS, PNP 경로 비교 대시보드까지 실험했지만, 현재 제품 방향은 더 단순합니다.
@@ -50,6 +65,18 @@ Gemini는 이후 운영 분석 provider로 연결할 예정입니다. 중요한 
 - Gemini 연결 전 provider contract 검증
 
 기존 프로필, CRS, 시뮬레이터, 경로 비교 화면은 코드에 일부 남아 있을 수 있지만 현재 주력 제품 흐름은 아닙니다.
+
+## 배포 상태
+
+현재 앱은 작은 VPS 환경을 기준으로 배포할 수 있게 준비했습니다.
+
+- Next.js standalone build
+- `/backend` 같은 내부 경로 뒤의 FastAPI
+- PM2 프로세스 관리
+- 배포 repo 밖에 저장되는 SQLite 데이터
+- 호스트 권한이 허용될 경우 Nginx reverse proxy
+
+기존 가비아 컨테이너 호스팅으로 배포 테스트를 진행했지만, 해당 환경은 Node.js 16, Python 런타임 없음, sudo 권한 없음, 단일 관리 `$PORT` 구조였습니다. 현재 FastAPI + Next.js 구조와 맞지 않아, 실제 운영 배포는 Python 사용이 가능한 VPS 또는 별도 런타임 확보 전까지 보류했습니다.
 
 ## 기술 스택
 
@@ -106,6 +133,13 @@ yarn dev
 NEXT_PUBLIC_API_BASE_URL="http://127.0.0.1:8010"
 ```
 
+백엔드/런타임 설정은 필요 시 아래 값을 사용합니다.
+
+```bash
+PR_COMPASS_DATA_DIR="/absolute/path/to/pr-compass-data"
+PR_COMPASS_WEB_APP_URL="http://127.0.0.1:3000"
+```
+
 SMTP 발송 테스트를 할 경우 아래 값을 설정합니다.
 
 ```bash
@@ -149,6 +183,12 @@ yarn --cwd web build
 
 ```bash
 .venv/bin/python scripts/send_test_briefing_email.py --recipient-email you@example.com --scenarios 1 --pretty
+```
+
+별도 배포 repo용 산출물 준비:
+
+```bash
+./scripts/prepare_deploy_repo.sh
 ```
 
 ## Gemini 연결 전 체크
